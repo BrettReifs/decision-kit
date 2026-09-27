@@ -1,0 +1,13 @@
+{
+  "name": "decision-kit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "node --check .github/extensions/decision-kit/extension.mjs && node --check .github/extensions/decision-kit/renderer.mjs",
+    "test": "node --test"
+  }
+}
