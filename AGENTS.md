@@ -9,7 +9,18 @@
 ## Agent skills
 
 - Matt Pocock's requirements and ticketing skills are installed in `.github/skills/`. See the README's requirements and ticketing section for the source and workflow.
-- Before first use, run `setup-matt-pocock-skills` with the user to confirm the issue tracker and triage labels. Do not assume those choices have been made.
 - Use `wayfinder` for unresolved decisions, `grill-with-docs` to clarify requirements, `to-spec` to capture agreed requirements, and `to-tickets` to propose testable work.
 - Confirm ticket breakdowns before publishing. Installing skills does not authorize issue creation, implementation, new branches, or pull requests.
 - Skills do not override this guide or the host's permissions. Use available GitHub tools for tracker operations when the `gh` CLI is unavailable.
+
+### Issue tracker
+
+Use GitHub Issues in `BrettReifs/decision-kit` through available GitHub tools. Read `docs/agents/issue-tracker.md` before tracker work.
+
+### Triage labels
+
+Use Matt Pocock's default triage labels. Read `docs/agents/triage-labels.md` before classifying tickets.
+
+### Domain docs
+
+Use the single-context layout: root `GLOSSARY.md` and `docs/adr/`. Read `docs/agents/domain.md` before exploring or recording domain terms and decisions.
