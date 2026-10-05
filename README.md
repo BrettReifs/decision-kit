@@ -55,6 +55,39 @@ The project extension is discovered from `.github/extensions/decision-kit/extens
 
 Host integrations can invoke `run_preset` and `reset_state`. Both actions validate inputs with JSON Schema. The renderer communicates only with its per-instance HTTP server on `127.0.0.1` using an ephemeral port.
 
+## Requirements and ticketing skills
+
+A focused set of [Matt Pocock's skills](https://github.com/mattpocock/skills) is installed in `.github/skills/` for Copilot hosts that support repository skills. The set includes the supporting files needed by these skills:
+
+| Skill | Purpose |
+|---|---|
+| `setup-matt-pocock-skills` | Confirm the issue tracker, triage labels, and domain document layout. |
+| `wayfinder` | Map open questions as decision tickets before committing to a solution. |
+| `grill-with-docs` | Clarify requirements with the user and record agreed terms and decisions. |
+| `to-spec` | Turn an agreed conversation into a specification on the issue tracker. |
+| `to-tickets` | Propose testable, end-to-end tickets with acceptance criteria and blockers. |
+| `triage` | Review tickets and identify missing information or readiness for work. |
+| `grilling`, `domain-modeling`, `research`, `prototype` | Support interviews, shared terms, evidence gathering, and design validation. |
+
+### First use
+
+1. Start a new Copilot session in this checkout so the host can discover the skills. Ask it to use a skill by name; slash-command availability depends on the host.
+2. Before declaring setup complete, check the repository's labels against the configured triage labels and the `wayfinder:map`, `wayfinder:research`, `wayfinder:prototype`, `wayfinder:grilling`, and `wayfinder:task` labels. Ask for explicit approval before creating any missing labels. If labels are missing and approval is not given, report that setup is pending. Use available GitHub tools; the `gh` CLI is not required.
+3. Read [tracker operations](docs/agents/issue-tracker.md), [triage labels](docs/agents/triage-labels.md), and [domain document rules](docs/agents/domain.md) before using the workflow. No tickets or labels are created by this installation.
+4. Use `wayfinder` to find the decisions needed for portable rules, evaluations, traces, and specification adherence. This is decision discovery, not implementation.
+5. Use `grill-with-docs` to resolve requirements, then `to-spec` to capture the agreed scope and test boundaries.
+6. Use `to-tickets` to review the ticket breakdown before publishing.
+
+You can edit `docs/agents/*.md` later. Re-run `setup-matt-pocock-skills` with the user when changing the tracker or restarting setup. Create the glossary and architecture decision records only after agreeing on terms or decisions; no placeholders are required.
+
+These are agent workflow instructions, not Canvas classifiers or an evaluation engine. They do not add cross-workspace installation or device-profile sync. A checkout on another device carries the same skill files, but its host must support skill discovery and have its own tracker access.
+
+### Source and updates
+
+The installed files come from upstream commit [`4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d`](https://github.com/mattpocock/skills/tree/4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d). They were installed from that commit's archive with `skills` CLI version `1.7.0` and placed in `.github/skills/`. No runtime dependency was added.
+
+The skill folders are unmodified upstream copies. Review upstream changes before replacing them; do not automatically update to the latest revision. Retain the upstream [MIT license](.github/skills/LICENSE) when copying or updating the skills.
+
 ## Model and API references
 
 Verified against the official OpenRouter documentation on 2026-09-27:
