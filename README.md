@@ -72,10 +72,11 @@ A focused set of [Matt Pocock's skills](https://github.com/mattpocock/skills) is
 ### First use
 
 1. Start a new Copilot session in this checkout so the host can discover the skills. Ask it to use a skill by name; slash-command availability depends on the host.
-2. Setup is complete: use GitHub Issues in `BrettReifs/decision-kit`, Matt Pocock's default triage labels, and a single-context domain layout. Read [tracker operations](docs/agents/issue-tracker.md), [triage labels](docs/agents/triage-labels.md), and [domain document rules](docs/agents/domain.md) before using the workflow. Use available GitHub tools; the `gh` CLI is not required.
-3. Use `wayfinder` to find the decisions needed for portable rules, evaluations, traces, and specification adherence. This is decision discovery, not implementation.
-4. Use `grill-with-docs` to resolve requirements, then `to-spec` to capture the agreed scope and test boundaries.
-5. Use `to-tickets` to review the ticket breakdown before publishing. No tickets or labels are created by this installation.
+2. Before declaring setup complete, check the repository's labels against the configured triage labels and the `wayfinder:map`, `wayfinder:research`, `wayfinder:prototype`, `wayfinder:grilling`, and `wayfinder:task` labels. Ask for explicit approval before creating any missing labels. If labels are missing and approval is not given, report that setup is pending. Use available GitHub tools; the `gh` CLI is not required.
+3. Read [tracker operations](docs/agents/issue-tracker.md), [triage labels](docs/agents/triage-labels.md), and [domain document rules](docs/agents/domain.md) before using the workflow. No tickets or labels are created by this installation.
+4. Use `wayfinder` to find the decisions needed for portable rules, evaluations, traces, and specification adherence. This is decision discovery, not implementation.
+5. Use `grill-with-docs` to resolve requirements, then `to-spec` to capture the agreed scope and test boundaries.
+6. Use `to-tickets` to review the ticket breakdown before publishing.
 
 You can edit `docs/agents/*.md` later. Re-run `setup-matt-pocock-skills` with the user when changing the tracker or restarting setup. Create the glossary and architecture decision records only after agreeing on terms or decisions; no placeholders are required.
 
