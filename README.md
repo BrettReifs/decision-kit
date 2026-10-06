@@ -55,6 +55,107 @@ The project extension is discovered from `.github/extensions/decision-kit/extens
 
 Host integrations can invoke `run_preset` and `reset_state`. Both actions validate inputs with JSON Schema. The renderer communicates only with its per-instance HTTP server on `127.0.0.1` using an ephemeral port.
 
+## Passive delivery nudge and evaluations
+
+The first delivery slice is a **possible polish-loop nudge**, independent of the Canvas and
+OpenRouter. It requires no self-report, feedback form, model call, or API key. It does not
+change Jev decisions or grant execution permissions.
+
+The repository hook in `.github/hooks/decision-kit.json` uses Copilot's documented
+[`postToolUse` event and `additionalContext` output](https://docs.github.com/en/copilot/reference/hooks-reference).
+On a host that supports that output, the reminder goes to the agent after a successful tool
+call, not to a user approval dialog. Start a new host session after installing the hook.
+Node.js 20+ and Git must be available to the hook process.
+
+### What triggers it
+
+Three narrow spacing or corner-radius replacements in the same file, within the last ten
+successful tool observations and fifteen minutes, produce at most one reminder per session.
+The agent is asked to check the **existing agreed outcome**, preserve necessary usability
+and accessibility work, and verify the current slice before the next authorized commit or PR.
+The hook never declares work complete, changes the contract, commits, opens a PR, or deploys.
+
+The classifier supports `edit` and `str_replace_editor` replacement arguments (`path` or
+`file_path`, `old_str`/`new_str` or `oldString`/`newString`, including JSON-encoded arguments).
+It recognizes only whole snippets of spacing or radius declarations in CSS, SCSS, HTML,
+JavaScript, and JSX/TSX files. Contrast, focus, mixed behavior changes, failed edits, and
+unsupported patches do not qualify. Larger replacements and `apply_patch` are deliberately
+not inferred to be cosmetic. Spacing can still be important: the nudge is advisory, not a
+finding of wasted work. These thresholds are initial heuristics, not calibrated facts.
+
+Set `DECISION_KIT_DELIVERY_MODE` in the host environment:
+
+| Mode | Behavior |
+|---|---|
+| `nudge` (default) | Observe and output at most one advisory reminder per session. |
+| `observe` | Record candidate signals without injecting a reminder. |
+| `off` | Do not collect or output anything. |
+
+You can also disable this hook file with its top-level `disableAllHooks` setting.
+Missing or incompatible host events mean reduced coverage, not proof that no drift occurred.
+The implementation is tested with documented payloads; live host delivery is not verified by
+the unit tests. There is no automatic cross-host installation or device synchronization.
+
+### Local observations and privacy
+
+State lives in `decision-kit/` inside the current worktree's Git metadata directory, outside
+tracked files. It contains hashed session IDs and relative file identifiers, event timestamps,
+bounded recent event categories, counts, and hook processing time. Hashes are identifiers,
+not anonymization. Prompts, source text, tool results, credentials, and raw file paths are
+not persisted or sent over the network.
+
+State is isolated by worktree and session. Atomic writes and a per-session lock prevent
+duplicate nudges from overlapping calls; a contended lock skips the observation rather than
+waiting. Unsupported, stale, or same-timestamp duplicate events are conservatively skipped.
+A killed process can leave a lock; after stopping the host, remove the matching `.lock`
+directory to resume observation. Corrupt state is not silently reset and re-nudged.
+
+There is no automatic retention cleanup in this slice. After stopping the host, deleting
+`decision-kit/` from the directory reported by `git rev-parse --absolute-git-dir` clears these
+observations and reminder suppression. Do not delete the Git metadata directory itself.
+Cloud-agent sandbox data is ephemeral and is not uploaded.
+
+### Run the targeted evaluations
+
+```text
+npm run eval:delivery
+npm run delivery:report
+```
+
+The eval suite replays synthetic positive and negative cases and tests the outcome evaluator's
+guardrails. It is a regression baseline, **not evidence of faster or better real delivery**.
+The report summarizes local observations and nudge outputs. It leaves cost, verified delivery
+time, quality, and human attention as `null`: these hooks do not provide those facts.
+Nudge output is not proof of host receipt, agent compliance, or human attention saved.
+Reported hook time excludes process startup and final persistence.
+
+`delivery-evaluation.mjs` exports `evaluateDeliveryOutcomes({ policy, slices })` for future
+passive outcome adapters. No user data-entry step or live experiment is installed.
+Its input contract is:
+
+| Input | Required evidence |
+|---|---|
+| Policy | `id`, `fixedAt` epoch milliseconds, `primaryMetric` (`costUsd` or `deliveryMs`), `minimumPerGroup` (at least two), positive `minimumImprovement`, positive `followupMs`, and `maxRegression` for every metric. Improvement and regression limits use each metric's absolute units. |
+| Slice identity | Unique `id`, `policyId`, `group` (`control` or `nudge`), `scopeClass`, original `contractVersion`, `startedAt` epoch milliseconds, and `scopeChanged`. Fix the policy before any slice begins and retain the original contract. |
+| Outcome | `costUsd` including the kit, verification, and retries; `costIncludesKit`; elapsed commitment-to-verified-delivery `deliveryMs`; `acceptancePassed`; `reworkCount`; linked `defectCount`; `interruptions`; and elapsed post-delivery `followupMs`. Use `null` for unknown metric, acceptance, or follow-up evidence. |
+
+Trusted adapters must read acceptance and external delivery state independently; agent
+completion claims are not verification. The evaluator validates the record structure, not
+the truth of supplied evidence. Include **all** enrolled slices, including incomplete ones.
+Do not label session activity as a completed slice or populate unknown values with zero.
+
+The evaluator compares one task class, preserves incomplete records, checks follow-up
+coverage and scope changes, and reports each metric separately. A faster result cannot hide
+higher cost, more rework or defects, or more interruptions. Too little evidence cannot pass.
+Even a promising comparison is labeled **association**, never causation; automatic promotion
+is always disabled. Sample-size limits are reporting gates, not a statistical power analysis.
+
+The next evidence boundary is passive contract/acceptance, total-cost, delivery-state, and
+follow-up defect adapters. An approved randomized slice-level experiment and uncertainty
+analysis are still needed before claiming causal improvement or no material harm. Nothing
+in this release automatically assigns experiments, weakens safety checks, or claims that
+shipping has improved.
+
 ## Requirements and ticketing skills
 
 A focused set of [Matt Pocock's skills](https://github.com/mattpocock/skills) is installed in `.github/skills/` for Copilot hosts that support repository skills. The set includes the supporting files needed by these skills:
