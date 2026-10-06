@@ -1,5 +1,9 @@
 const metrics = ["costUsd", "deliveryMs", "reworkCount", "defectCount", "interruptions"];
 
+function tolerance(...values) {
+    return Number.EPSILON * Math.max(1, ...values.map(Math.abs)) * 8;
+}
+
 export function evaluateDeliveryOutcomes({ policy, slices }) {
     if (!policy || typeof policy.id !== "string" || !policy.id ||
         !Number.isSafeInteger(policy.fixedAt) || policy.fixedAt < 0 ||
@@ -60,17 +64,24 @@ export function evaluateDeliveryOutcomes({ policy, slices }) {
             const values = group.map((slice) => slice[metric]).filter((value) => value !== null);
             // Do not silently discard incomplete or undelivered slices.
             averages[name] = values.length === group.length && values.length
-                ? values.reduce((sum, value) => sum + value, 0) / values.length
+                ? values.reduce((mean, value) => mean + value / values.length, 0)
                 : null;
+            if (!Number.isFinite(averages[name])) averages[name] = null;
         }
         const delta = averages.control === null || averages.nudge === null
             ? null : averages.nudge - averages.control;
         comparison[metric] = { ...averages, delta };
         if (delta === null) blockers.push(`Incomplete ${metric} evidence.`);
-        else if (delta > policy.maxRegression[metric]) regressions.push(metric);
+        else if (delta - policy.maxRegression[metric] >
+            tolerance(averages.control, averages.nudge, policy.maxRegression[metric])) {
+            regressions.push(metric);
+        }
     }
     const primaryDelta = comparison[policy.primaryMetric].delta;
-    const improved = primaryDelta !== null && -primaryDelta >= policy.minimumImprovement;
+    const improved = primaryDelta !== null && primaryDelta < 0 &&
+        policy.minimumImprovement + primaryDelta <= tolerance(
+            primaryDelta, policy.minimumImprovement,
+        );
     return {
         policyId: policy.id,
         counts: { control: groups.control.length, nudge: groups.nudge.length },

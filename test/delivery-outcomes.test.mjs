@@ -72,3 +72,21 @@ test("policies must precede slices and records cannot be duplicated", () => {
     assert.throws(() => evaluateDeliveryOutcomes({ policy: { ...policy, maxRegression: {} }, slices }));
     assert.throws(() => evaluateDeliveryOutcomes({ policy, slices: [{ ...slices[0], policyId: "other" }] }));
 });
+
+test("equal fractional costs in different orders do not breach a zero-regression guardrail", () => {
+    const slices = ["control", "nudge"].flatMap((group) =>
+        (group === "control" ? [0.3, 0.2, 0.1] : [0.1, 0.2, 0.3]).map((costUsd, index) => ({
+            ...records()[group === "control" ? 0 : 2],
+            id: `${group}-${index}`, costUsd,
+        })),
+    );
+    const report = evaluateDeliveryOutcomes({ policy, slices });
+    assert.equal(report.status, "promising-association");
+    slices[3].costUsd += 0.000001;
+    assert.equal(evaluateDeliveryOutcomes({ policy, slices }).status, "guardrail-breach");
+});
+
+test("numerical tolerance cannot label unchanged large values as an improvement", () => {
+    const slices = records().map((slice) => ({ ...slice, deliveryMs: 1e20 }));
+    assert.equal(evaluateDeliveryOutcomes({ policy, slices }).status, "no-demonstrated-improvement");
+});

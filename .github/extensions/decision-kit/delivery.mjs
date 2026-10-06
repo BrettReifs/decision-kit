@@ -43,7 +43,7 @@ export function classifyTool(input, root) {
         const after = args?.new_str ?? args?.newString;
         if (typeof path === "string" && path.length <= 4096) {
             const local = relative(root, resolve(root, path));
-            const inside = local && !isAbsolute(local) && local !== ".." && !local.startsWith("../");
+            const inside = local && !isAbsolute(local) && local !== ".." && !/^\.\.[\\/]/.test(local);
             if (inside && [".css", ".scss", ".html", ".mjs", ".js", ".tsx", ".jsx"].includes(extname(local))) {
                 event.target = hash(local);
                 const previous = declarations(before);

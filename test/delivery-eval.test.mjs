@@ -98,6 +98,13 @@ const cases = [
         nudges: 0,
     },
     {
+        name: "backslash parent traversal is excluded on either platform",
+        events: [1, 2, 3].map((timestamp) => edit(timestamp, {
+            toolArgs: { ...edit(1).toolArgs, path: `${root}/..\\outside.css` },
+        })),
+        nudges: 0,
+    },
+    {
         name: "no-op replacements do not count as polish",
         events: [1, 2, 3].map((timestamp) => edit(timestamp, {
             toolArgs: { ...edit(1).toolArgs, new_str: edit(1).toolArgs.old_str },
