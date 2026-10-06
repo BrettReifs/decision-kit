@@ -7,7 +7,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "check": "node --check .github/extensions/decision-kit/extension.mjs && node --check .github/extensions/decision-kit/renderer.mjs",
-    "test": "node --test"
+    "check": "node --check .github/extensions/decision-kit/extension.mjs && node --check .github/extensions/decision-kit/renderer.mjs && node --check .github/extensions/decision-kit/delivery.mjs && node --check .github/extensions/decision-kit/delivery-hook.mjs && node --check .github/extensions/decision-kit/delivery-evaluation.mjs",
+    "test": "node --test",
+    "eval:delivery": "node --test test/delivery-eval.test.mjs test/delivery-outcomes.test.mjs",
+    "delivery:report": "node .github/extensions/decision-kit/delivery-hook.mjs report"
   }
 }

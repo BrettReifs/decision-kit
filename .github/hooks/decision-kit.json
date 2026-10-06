@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "node .github/extensions/decision-kit/delivery-hook.mjs postToolUse",
+        "powershell": "node .github/extensions/decision-kit/delivery-hook.mjs postToolUse",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}
