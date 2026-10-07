@@ -189,6 +189,27 @@ The installed files come from upstream commit [`4588b32ecab9ecc9fc8cc6b6c5e7d675
 
 The skill folders are unmodified upstream copies. Review upstream changes before replacing them; do not automatically update to the latest revision. Retain the upstream [MIT license](.github/skills/LICENSE) when copying or updating the skills.
 
+## Data handoff skill
+
+Ask Copilot: “Use data-handoff for the ticket-to-summary boundary in this codebase.”
+The generic [skill](.github/skills/data-handoff/SKILL.md) produces one short handoff
+per boundary: Purpose, Input JSON, Output JSON, Field map, and Handling rules.
+JSON is canonical; YAML or TypeScript translations are available only on request.
+The [template](.github/skills/data-handoff/handoff-template.md) is a synthetic
+golden-path demo, not an implemented contract.
+
+Validate a draft with Node.js 20+ (no dependencies or preapproval setup needed):
+
+```sh
+node .github/skills/data-handoff/validate-handoff.mjs /absolute/path/to/handoff.md
+```
+
+This checks formatting, not whether the code was understood correctly. Unknown
+interfaces stay incomplete rather than gaining invented JSON. Review semantics
+with the separate [rubric and five eval cards](.github/skills/data-handoff/evals.json).
+Give engineers only the handoff, not evaluation scores. Validator tests run with
+`npm test`, or `node --test test/data-handoff.test.mjs` for a focused check.
+
 ## Model and API references
 
 Verified against the official OpenRouter documentation on 2026-09-27:
