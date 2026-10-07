@@ -207,8 +207,29 @@ node .github/skills/data-handoff/validate-handoff.mjs /absolute/path/to/handoff.
 This checks formatting, not whether the code was understood correctly. Unknown
 interfaces stay incomplete rather than gaining invented JSON. Review semantics
 with the separate [rubric and five eval cards](.github/skills/data-handoff/evals.json).
-Give engineers only the handoff, not evaluation scores. Validator tests run with
+In data-only mode, give engineers only the handoff, not evaluation scores. Validator tests run with
 `npm test`, or `node --test test/data-handoff.test.mjs` for a focused check.
+
+For a tested prototype, ask for **optional reproduction mode**. The
+[reference](.github/skills/data-handoff/reproduction.md) adds a short `HANDOFF.md`
+orientation, selected viewer slices in `slices.json`, property-based `cases.jsonl`,
+and model/harness/artifact attribution with sanitized evidence in `provenance.json`.
+Each selected slice still has a separate five-section handoff. Shared mappings
+are referenced once; actual access enforcement is distinct from UI hiding.
+
+```sh
+node .github/skills/data-handoff/bootstrap.mjs scaffold /absolute/path/to/new-kit
+node .github/skills/data-handoff/bootstrap.mjs validate /absolute/path/to/new-kit
+```
+
+Scaffold requires a new directory and creates an **incomplete** kit, not evidence
+or benchmark scores. Validation checks JSON, IDs/declared local links, safe file
+paths, slice handoff format, and a golden case per selected slice. It does not
+prove semantics, authorization, privacy clearance, benchmark success, or fidelity.
+Port deterministic mappings and gates; substitute and re-evaluate model/harness
+behavior. Candidate Foundry models are not assumed equivalent. No network calls,
+source scraping, script execution, model choice, or Canvas runtime changes.
+Focused tests: `node --test test/data-handoff.test.mjs test/reproduction-kit.test.mjs`.
 
 ## Model and API references
 
