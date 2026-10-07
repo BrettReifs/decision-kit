@@ -1,0 +1,77 @@
+{
+  "review": "Score manually or via agent review against inspected code. Keep this review outside the published handoff. Formatting validation does not prove semantics.",
+  "passing": {
+    "minimum_total": 8,
+    "must_not_score_zero": ["JSON examples", "Data mapping"],
+    "automatic_fail": ["Exposed secrets or real personal data", "Unsupported assumption presented as observed"]
+  },
+  "rubric": [
+    {
+      "criterion": "Boundary",
+      "0": "Wrong or unclear boundary.",
+      "1": "Mostly right, but an important step is missing.",
+      "2": "Purpose and direction clearly identify producer, consumer, input, and output."
+    },
+    {
+      "criterion": "JSON examples",
+      "0": "Invalid JSON, fictional interface, or misleading fields.",
+      "1": "Valid JSON with notable omissions.",
+      "2": "Valid representative golden path, consistent with evidence and labeled assumptions."
+    },
+    {
+      "criterion": "Data mapping",
+      "0": "Important transformations are missing or wrong.",
+      "1": "Main mapping is right but incomplete.",
+      "2": "Meaningful renames, derived, dropped, and ambiguous fields are clear; obvious passthroughs are omitted, or explicitly no non-obvious mappings."
+    },
+    {
+      "criterion": "Handling rules",
+      "0": "Missing rules or claims contradict the code.",
+      "1": "Useful but vague or incomplete.",
+      "2": "Short actionable rules cover relevant failures, trust boundaries, assumptions, and open decisions."
+    },
+    {
+      "criterion": "Handoff clarity",
+      "0": "An engineer cannot start from it.",
+      "1": "Usable after substantial interpretation.",
+      "2": "A junior engineer can see what to send, expect, and confirm in the five sections."
+    }
+  ],
+  "cards": [
+    {
+      "case": "simple-api",
+      "setup": "POST receives display_name, trims it into name, drops debug, and returns a created record. Code rejects blank names.",
+      "must_capture": ["Caller → API → caller", "display_name → name trim", "debug dropped", "Blank-name rejection; error shape unknown if not shown"],
+      "must_not_claim": ["Idempotency", "An invented error payload"],
+      "sensitive_data": "Use a synthetic display name."
+    },
+    {
+      "case": "tool-agent",
+      "setup": "Tool result items is an array. Agent derives summary. Tool errors can produce no summary.",
+      "must_capture": ["Tool → agent → caller", "items → summary is generated", "Tool failure can prevent summary"],
+      "must_not_claim": ["Generated summary is verified", "Guaranteed retries", "Enforced array length"],
+      "sensitive_data": "Use synthetic tool results."
+    },
+    {
+      "case": "event-workflow",
+      "setup": "Worker receives event_id and amount_cents, derives amount by dividing by 100, and emits a result event. No deduplication code is shown.",
+      "must_capture": ["Event producer → worker → result consumer", "amount_cents → amount with units and division"],
+      "must_not_claim": ["Exactly-once delivery", "Deduplication", "Guaranteed ordering"],
+      "sensitive_data": "Use synthetic IDs and amounts."
+    },
+    {
+      "case": "sparse-prototype",
+      "setup": "Only a function accepting text and returning generated text exists; no transport, validation, or wire format is established.",
+      "must_capture": ["Known function boundary", "Unknown wire input/output", "Consequential recommendations labeled Assumed—confirm", "Incomplete validation reported without fictional JSON"],
+      "must_not_claim": ["Implemented JSON contract", "Enforced nonempty input", "Known error shape"],
+      "sensitive_data": "Do not copy real prompts."
+    },
+    {
+      "case": "sensitive-data",
+      "setup": "Input has email, access_token, and message; serializer returns derived preview only. Logs and retention are not inspected.",
+      "must_capture": ["email and access_token dropped at this output boundary", "message → preview", "Synthetic examples", "Unknown logging and retention"],
+      "must_not_claim": ["System-wide redaction", "No logging", "Retention guarantees"],
+      "sensitive_data": "Never reproduce source credentials or real personal data; use unmistakably synthetic values."
+    }
+  ]
+}
