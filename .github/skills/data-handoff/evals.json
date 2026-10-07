@@ -37,6 +37,18 @@
       "2": "A junior engineer can see what to send, expect, and confirm in the five sections."
     }
   ],
+  "reproduction_review": {
+    "scope": "Optional kit review only; preserve the five-section rubric and keep all scores outside slice handoffs.",
+    "checks": [
+      "Score each selected slice separately; an overall score must not hide a failed access boundary.",
+      "Include golden and relevant negative cases: different viewer/tenant, denied or empty data, invalid input, and tool failure.",
+      "Distinguish actual access enforcement from UI hiding; no system-wide security inference.",
+      "Attribute tested model/version/settings, prompts/scripts/tools, harness-supplied behavior, and mocked steps; uncaptured facts stay Unknown.",
+      "Tie consequential observations and benchmark results to sanitized evidence; distinguish recommendations, assumptions, and causal claims.",
+      "Port deterministic mappings and decision gates; re-evaluate candidate model/harness against properties, not exact generated prose.",
+      "Record benchmark scope, case set, thresholds, per-slice scores, failures, and exclusions outside handoffs; formatting success is not reproduction success."
+    ]
+  },
   "cards": [
     {
       "case": "simple-api",

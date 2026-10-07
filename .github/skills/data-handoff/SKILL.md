@@ -1,6 +1,6 @@
 ---
 name: data-handoff
-description: Produce a short, human-readable data map and input/output handoff from any codebase or agentic prototype. Use when engineers need to integrate across an API, tool, event, file, or other data boundary.
+description: Produce a short, human-readable data map and input/output handoff from any codebase or agentic prototype, with optional evidence-backed reproduction kits. Use when engineers need to integrate across a data boundary or reproduce tested behavior in another model or harness.
 ---
 
 # Data handoff
@@ -72,6 +72,20 @@ mapping. Secrets or unsupported assumptions presented as observed automatically
 fail. The five small case cards are representative scenarios for review, not
 executed code fixtures or proof of real behavior.
 
-Deliver only the five-section handoff to engineers. Keep scores, eval cards, and
+In ordinary data-only mode, deliver only the five-section handoff to engineers. Keep scores, eval cards, and
 validator output outside it. Report unresolved evidence gaps rather than claiming
 a complete or verified contract.
+
+## Optional reproduction mode
+
+When asked to hand off a benchmarked prototype to another model or harness, use
+[reproduction.md](reproduction.md). Inventory slices briefly, select the needed
+viewer/integration boundaries, then write separate five-section handoffs.
+Keep the orientation, shared transformations, sanitized evidence, cases, and
+model/harness attribution in the companion kit, not new sections in each handoff.
+
+The optional bootstrap scaffolds an explicitly incomplete kit and validates only
+mechanical structure. Port deterministic mappings, validation, and decision gates;
+substitute and re-evaluate model and harness behavior. Do not create an agent or
+runtime, choose a model automatically, or claim model equivalence. Preserve unknowns
+and distinguish actual access enforcement from UI visibility.
