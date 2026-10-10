@@ -1,82 +1,105 @@
-# Microsoft AI Decision-1: source-backed research
+# Microsoft AI Decision-1: research and evaluation guide
 
 **Checked:** 2026-10-10  
-**Status:** The model is not verified from a readable first-party source.
+**Status:** Model-specific capabilities remain unverified in this session.
 
 ## Summary
 
-“Microsoft AI Decision1” most likely refers to a claimed product named
-**Microsoft-Decision-1**. Search results surfaced Microsoft-branded announcement,
-Learn, Tech Community, and Foundry catalog URLs for that name. However, direct
-retrieval of those pages failed in this research environment. I could not read
-their contents or confirm their publication date. Treat the URLs as leads, not as
-proof that the model exists or that the claims about it are correct.
+The user identified two primary sources for this investigation:
+[Microsoft Command Line: Microsoft-Decision-1](https://commandline.microsoft.com/microsoft-decision-1-model-foundry/)
+and the [Microsoft Foundry catalog entry](https://ai.azure.com/catalog/models/Microsoft-Decision-1).
+I tried to retrieve both pages, along with Microsoft Learn, Azure AI Foundry,
+Tech Community, and Microsoft GitHub sources. The requests failed at hostname
+resolution. I could not inspect the source text or follow its links.
 
-For now, the defensible conclusion is **unverified**, not “does not exist.” This
-note does not give the model a technical profile because no technical detail
-could be checked against an accessible first-party source.
+This is an access limit, not evidence that the model or the pages do not exist.
+It also means I cannot give a source-backed account of the model's capabilities
+or say when the model itself should be used. I will not infer those details
+from the name, a search snippet, or a third-party summary.
 
-## Candidate Microsoft-Decision-1 sources
+## What is and is not established
 
-These first-party-looking URLs surfaced during research:
+| Question | Research result |
+|---|---|
+| Which model is under review? | The user-provided source URLs identify it as **Microsoft-Decision-1**. I could not independently inspect those pages. |
+| What task does it perform? | Unknown from accessible first-party evidence. |
+| What are its inputs and outputs? | Unknown. No schema or API example was retrieved. |
+| What does any score or confidence mean? | Unknown. Do not treat an undocumented score as a calibrated probability. |
+| What deployments, regions, versions, or prices are available? | Unknown. The Foundry catalog page was not retrievable. |
+| What are its benchmarks, limits, and intended or unsuitable uses? | Unknown. No readable model card, evaluation report, or use guidance was retrieved. |
 
-| Candidate page | What the URL or indexed title suggests | Verification |
-|---|---|---|
-| [Microsoft Command Line announcement](https://commandline.microsoft.com/microsoft-decision-1-model-foundry/) | Title surfaced as “Microsoft-Decision-1: Our model for fast decision-making”; search results attributed an October 9, 2026 date. | Page could not be retrieved. The title and date are unconfirmed. |
-| [Microsoft Learn usage guide](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision) | URL suggests a deployment guide for Microsoft-Decision-1 in Foundry. | Page could not be retrieved; contents and date are unconfirmed. |
-| [Microsoft Tech Community post](https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-microsoft-decision-1-in-microsoft-foundry-for-decision-and-classific/4562742) | URL suggests an announcement about Microsoft-Decision-1 in Foundry. | Page could not be retrieved; title and contents are unconfirmed. |
-| [Microsoft Foundry catalog entry](https://ai.azure.com/catalog/models/microsoft-decision-1) | URL suggests a catalog entry with this model name. | Page could not be retrieved; listing and availability are unconfirmed. |
+Direct fetches of the two user-provided URLs returned hostname-resolution errors:
+[announcement](https://commandline.microsoft.com/microsoft-decision-1-model-foundry/)
+and [catalog](https://ai.azure.com/catalog/models/Microsoft-Decision-1).
+The same failure affected attempted Microsoft documentation and announcement
+pages. A failed fetch does not show that a page is absent. It only prevents
+verification in this session.
 
-The research environment returned hostname-resolution failures for these
-addresses. That does **not** prove the pages are absent; it means this research
-could not verify them. Search-result titles alone are not enough to establish a
-launch, model capability, or specification.
+## How to decide whether to use it
 
-### Details that remain unknown
+The following is a **general due-diligence checklist**, not a claim about
+Microsoft's guidance for Decision-1. Do not select it for a production or
+consequential decision until first-party docs answer these questions:
 
-I could not verify a model card, paper, source repository, downloadable weights,
-API schema, model architecture, training data, evaluation method, benchmark
-results, pricing, context limits, or regional availability. Do not rely on
-specific performance or cost claims until they can be checked in accessible
-Microsoft documentation.
+1. **Task fit:** Does the documented task match the real decision? Is it
+   classification, ranking, scoring, generation, or another task?
+2. **Contract:** What exact fields can be sent? What exact fields come back?
+   What happens on missing, malformed, or out-of-scope inputs?
+3. **Output meaning:** Are outputs labels, rankings, scores, or probabilities?
+   Are scores calibrated for the target population and decision threshold?
+   Is abstention supported?
+4. **Operating limits:** What input/context limits, languages, throughput,
+   latency, rate limits, and version behavior are documented?
+5. **Service fit:** Which Foundry deployment path, regions, authentication,
+   pricing, data handling, and service lifecycle apply?
+6. **Risk controls:** What safety, privacy, monitoring, and human-review
+   guidance applies? Which uses are unsupported or prohibited?
+7. **Evidence:** What datasets, baselines, metrics, sample sizes, uncertainty,
+   and contamination controls support any quality or speed claims? Are the
+   tests relevant to the intended use?
 
-## Similar Microsoft work—not the same thing
+After these points are documented, evaluate the model against the current
+baseline on representative, held-out cases. Measure decision quality, failure
+types, latency, and total cost. Set human-review and fallback rules before
+deployment. These are recommended evaluation steps, not verified Decision-1
+features.
 
-- **Microsoft AI Decision Framework:** The
-  [Microsoft GitHub repository](https://github.com/microsoft/Microsoft-AI-Decision-Framework)
-  describes itself as a guide for navigating Microsoft's AI portfolio and
-  choosing technology. Its README covers decision-making about Microsoft
-  products; it does not present itself as an AI model.
-- **Project Causica:** Microsoft Research describes
-  [Causica](https://www.microsoft.com/en-us/research/project/project_azua/) as
-  work on decision optimization with causal machine learning, including
-  intervention and counterfactual prediction. The page links to the
-  [`microsoft/causica` codebase](https://github.com/microsoft/causica). This is
-  a distinct research project, not evidence that “Decision1” is another name
-  for Causica.
-- Microsoft Research's
-  [“A Causal AI Suite for Decision-Making”](https://www.microsoft.com/en-us/research/publication/a-causal-ai-suite-for-decision-making/)
-  describes open-source causal tools and libraries. Its publication page dates
-  the work to November 22, 2022, with a page update on August 17, 2023. It does
-  not identify a model named Decision1.
+## Similar Microsoft work; not evidence about Decision-1
 
-Microsoft Research's public search API returned no results for
-[`Decision1`](https://www.microsoft.com/en-us/research/wp-json/wp/v2/search?search=Decision1&per_page=10),
-[`Decision-1`](https://www.microsoft.com/en-us/research/wp-json/wp/v2/search?search=Decision-1&per_page=10),
-or [`decision model`](https://www.microsoft.com/en-us/research/wp-json/wp/v2/search?search=decision%20model&per_page=10).
-These bounded search results do not prove that no Microsoft product or research
-project exists.
+- The [Microsoft AI Decision Framework repository](https://github.com/microsoft/Microsoft-AI-Decision-Framework)
+  presents a guide for choosing Microsoft AI technologies. Its README describes
+  a technology-selection framework, not a model.
+- Microsoft Research describes [Project Causica](https://www.microsoft.com/en-us/research/project/project_azua/)
+  as work on decision optimization with causal machine learning, including
+  intervention and counterfactual prediction. It links to the
+  [`microsoft/causica` codebase](https://github.com/microsoft/causica). This is a
+  separate research project; it does not establish Decision-1 capabilities.
+- Microsoft Research's [“A Causal AI Suite for Decision-Making”](https://www.microsoft.com/en-us/research/publication/a-causal-ai-suite-for-decision-making/)
+  describes open-source causal tools and libraries. The page gives a publication
+  date of November 22, 2022, and an update date of August 17, 2023. It does not
+  establish a model named Decision-1.
 
 ## Relevance to Decision Kit
 
-The [Decision Kit README](../../README.md) describes a typed Jev decision result
-and a separate chat model that explains that result after the confidence gate.
-Until Microsoft-Decision-1 can be verified, there is no reliable basis for a
-technical or performance comparison, or for replacing Jev with it.
+The [Decision Kit README](../../README.md) says Jev selects the typed branch and
+exposes probabilities; a separate chat model explains the bounded result and
+must not change the branch or confidence gate. It also documents a `0.72`
+confidence threshold and a human-review signal. Until Decision-1's task,
+interface, and output semantics are verified, there is no sound basis to replace
+Jev or treat Decision-1 as equivalent.
+
+If the first-party docs support a relevant Decision-1 task, test it beside the
+existing Jev path before considering a change. Compare on the same held-out
+scenarios. Measure decision quality, cost, latency, and regressions in other
+outcomes; preserve explicit human review for uncertain or out-of-scope cases.
+The README's delivery evaluation guidance also warns that an observed
+improvement is association, not proof of causation.
 
 ## Sources and limits
 
-The Microsoft Research pages and the Microsoft AI Decision Framework repository
-were readable during this research. The candidate announcement, Learn, Tech
-Community, and catalog pages were not. Recheck the primary pages before using
-this note to make a model-selection or deployment decision.
+The Microsoft Research Causica and publication pages, the Microsoft AI Decision
+Framework repository page, and the local Decision Kit README were readable in
+the earlier research pass. The central Microsoft-Decision-1 announcement and
+catalog contents were not readable in this session. The model-specific
+questions above therefore remain open; recheck the supplied first-party pages
+before using this note to make a selection or deployment decision.
