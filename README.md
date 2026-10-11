@@ -243,6 +243,14 @@ Verified against the official OpenRouter documentation on 2026-09-27:
 
 The latest alias is convenient for this demonstration. Production systems should pin a tested Jev release when thresholds are calibrated against labeled data.
 
+## Copilot app research
+
+The [GitHub Copilot app operating guide](docs/research/github-copilot-app.md)
+records the official desktop app's capabilities and configuration evidence checked
+on 2026-10-11. It includes release tracking, app/CLI/SDK boundaries, safe local
+workflow profiles, validation steps, and open questions. App examples are not
+live-tested unless marked otherwise.
+
 ## Development
 
 ```text
