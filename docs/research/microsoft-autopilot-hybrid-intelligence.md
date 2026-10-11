@@ -1,6 +1,7 @@
 # Microsoft Autopilot and hybrid intelligence
 
-**Checked:** 2026-10-11  
+**Checked:** 2026-10-11
+
 **Status:** Partial verification. The Scout source was retrieved directly.
 The two newer announcement pages could not be retrieved.
 
