@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { settingsCatalog, settingsComponents, settingsCoverage, settingsSources } from "../.github/extensions/decision-kit/settings-catalog.mjs";
+import { listSettings, settingsCatalog, settingsComponents, settingsCoverage, settingsSources } from "../.github/extensions/decision-kit/settings-catalog.mjs";
 import { recommendSettings, settingsRules } from "../.github/extensions/decision-kit/settings-recommendations.mjs";
 
 test("catalog IDs, components, source links, and rule choices are consistent", () => {
@@ -20,6 +20,16 @@ test("catalog IDs, components, source links, and rule choices are consistent", (
             if (Array.isArray(setting.values) && value !== null) assert.ok(setting.values.includes(value), id);
         }
     }
+});
+
+test("index can be filtered and searched without mutating catalog entries", () => {
+    const experiments = listSettings({ status: "experimental" });
+    assert.ok(experiments.some(({ id }) => id === "experiment.threads"));
+    assert.ok(listSettings({ component: "accessibility" }).length > 10);
+    const found = listSettings({ query: "Session memory" });
+    found[0].label = "changed";
+    assert.equal(listSettings({ query: "Session memory" })[0].label, "Session memory");
+    assert.equal(listSettings({ component: "missing" }).length, 0);
 });
 
 test("cost classifier returns an advisory combination without changing inputs", () => {
@@ -65,7 +75,8 @@ test("preview consent, platform, and cloud eligibility are explicit gates", () =
         { goals: ["custom-provider"] },
     ]) assert.equal(recommendSettings(needs).recommendations.length, 0);
     assert.equal(recommendSettings({ goals: ["desktop-interaction"], platform: "windows", allowPreview: true }).recommendations.length, 1);
-    assert.equal(recommendSettings({ goals: ["background-work"], cloudEligible: true }).recommendations.length, 1);
+    assert.equal(recommendSettings({ goals: ["background-work"], cloudEligible: true }).recommendations.length, 0);
+    assert.equal(recommendSettings({ goals: ["background-work"], cloudEligible: true, cloudCreationVerified: true }).recommendations.length, 1);
 });
 
 test("experiments remain indexed but unverified controls are never recommended", () => {
@@ -86,4 +97,17 @@ test("invalid input and policy values fail rather than enabling a setting", () =
         assert.throws(() => recommendSettings(input), TypeError);
     }
     assert.deepEqual(recommendSettings({ goals: [] }).recommendations, []);
+});
+
+test("raw managed governance keys cannot be accepted and silently ignored", () => {
+    assert.throws(() => recommendSettings({
+        goals: ["desktop-interaction"], platform: "windows", allowPreview: true,
+        managed: { "managed.features.computerUse": [false] },
+    }), TypeError);
+    const result = recommendSettings({
+        goals: ["desktop-interaction"], platform: "windows", allowPreview: true,
+        managed: { "computer.enabled": [false] },
+    });
+    assert.equal(result.recommendations.length, 0);
+    assert.ok(result.blocked[0].issues.includes("policy:computer.enabled"));
 });

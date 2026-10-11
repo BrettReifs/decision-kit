@@ -10,7 +10,7 @@ export const settingsRules = [
     { id: "network", goal: "restricted-network", choices: [["sandbox.enabled", true], ["sandbox.internet", false], ["sandbox.localNetwork", false]], reason: "Restrict network access; providers, MCP, package installs, and tools may stop working." },
     { id: "desktop", goal: "desktop-interaction", choices: [["computer.enabled", true]], requires: ["supported-desktop", "preview-consent"], reason: "Use desktop tools only on supported local platforms with preview consent and approval." },
     { id: "provider", goal: "custom-provider", choices: [["provider.url", null], ["provider.key", null]], requires: ["preview-consent"], reason: "Configure a trusted provider in the app; enter secrets only in its credential UI." },
-    { id: "background", goal: "background-work", choices: [["automation.execution", "cloud"]], requires: ["cloud-eligible"], reason: "Cloud automation can run while the computer is off; verify access and costs." },
+    { id: "background", goal: "background-work", choices: [["automation.execution", "cloud"]], requires: ["cloud-eligible", "cloud-build-verified"], reason: "Cloud automation requires access and installed-build verification: v1.1.27 removes creation despite current how-to instructions." },
     { id: "guidance", goal: "project-guidance", choices: [["instructions.project", null]], reason: "Use repository-scoped guidance rather than applying task-specific advice globally." },
     { id: "canvas", goal: "visual-decisions", choices: [["canvas.project", null]], reason: "Use a project Canvas extension for inspectable decision output." },
     { id: "memory", goal: "experimental-memory", choices: [["experiment.memory", true]], reason: "Session memory has release evidence, but insufficient configuration evidence for a recommendation." },
@@ -22,12 +22,13 @@ export function recommendSettings(input) {
     if (input.platform !== undefined && !["macos", "windows", "linux"].includes(input.platform)) throw new TypeError("Unsupported platform.");
     if (input.allowPreview !== undefined && typeof input.allowPreview !== "boolean") throw new TypeError("allowPreview must be boolean.");
     if (input.cloudEligible !== undefined && typeof input.cloudEligible !== "boolean") throw new TypeError("cloudEligible must be boolean.");
+    if (input.cloudCreationVerified !== undefined && typeof input.cloudCreationVerified !== "boolean") throw new TypeError("cloudCreationVerified must be boolean.");
     if (input.managed !== undefined && (!input.managed || typeof input.managed !== "object" || Array.isArray(input.managed))) throw new TypeError("managed must map catalog setting IDs to effective allowed values.");
     const managed = input.managed ?? {};
     for (const [id, values] of Object.entries(managed)) {
         const setting = settingsCatalog.find((candidate) => candidate.id === id);
-        if (!setting || !Array.isArray(setting.values) || !Array.isArray(values) || values.some((value) => !setting.values.includes(value))) {
-            throw new TypeError("managed must contain known enumerated settings and allowed values.");
+        if (!setting || setting.scope === "managed" || !Array.isArray(setting.values) || !Array.isArray(values) || values.some((value) => !setting.values.includes(value))) {
+            throw new TypeError("managed must contain normalized non-governance setting IDs and allowed values.");
         }
     }
     const candidates = new Map();
@@ -36,6 +37,7 @@ export function recommendSettings(input) {
         const missing = (rule.requires ?? []).filter((requirement) => (
             requirement === "preview-consent" ? input.allowPreview !== true :
             requirement === "supported-desktop" ? !["macos", "windows"].includes(input.platform) :
+            requirement === "cloud-build-verified" ? input.cloudCreationVerified !== true :
             input.cloudEligible !== true
         ));
         const proposals = rule.choices.map(([id, value]) => {
