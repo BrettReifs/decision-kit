@@ -158,6 +158,42 @@ shipping has improved.
 
 ## Requirements and ticketing skills
 
+### Copilot app settings index and advisory classifiers
+
+The machine-readable settings index is in
+`.github/extensions/decision-kit/settings-catalog.mjs`. It exports
+`settingsCatalog`, `settingsComponents`, `settingsSources`, and `settingsCoverage`.
+Each setting records its component, control location, values, known default,
+scope, release status, source links, and evidence limits. `null` means unknown
+or a value that the user must supply. Preview features and experimental controls
+are separate categories. Imported CLI formats are not treated as proven app parity.
+
+The index is **not yet a complete app settings schema**. Coverage gaps are
+explicit. Session memory is indexed from release evidence, but its unverified
+toggle cannot be recommended. GitHub's global disable flags are not user settings.
+See [the source research](docs/research/github-copilot-app.md) for the evidence baseline.
+
+`settings-recommendations.mjs` exports `recommendSettings(needs)` and inspectable
+`settingsRules`. Supported goal IDs are `lower-cost`, `higher-quality`,
+`review-before-execution`, `parallel-work`, `restricted-network`,
+`desktop-interaction`, `custom-provider`, `background-work`, `project-guidance`,
+`visual-decisions`, and `experimental-memory`. Needs can also specify `platform`
+(`macos`, `windows`, `linux`), `allowPreview`, and verified `cloudEligible`.
+Optional `managed` maps catalog setting IDs to effective allowed values supplied
+by a trusted caller; it does not discover or enforce enterprise policy.
+
+The result includes proposed settings and combinations, source links, conflicts,
+blocked rules, and review needs. A conflict or policy block withholds the dependent
+combination. Preview features require explicit consent; unknown experiment
+controls remain blocked. Provider credentials are entered only in the app's
+credential UI, never passed to the classifier.
+
+This is a standalone, deterministic advisory API, not a new Canvas screen or an
+automatic configuration tool. It does not read or change app settings, call a
+model, or change Jev's branch or confidence gate. Its rules are uncalibrated
+heuristics, not proof of the best settings. Verify installed-build support,
+policy, eligibility, cost, and task outcomes before applying any proposal.
+
 A focused set of [Matt Pocock's skills](https://github.com/mattpocock/skills) is installed in `.github/skills/` for Copilot hosts that support repository skills. The set includes the supporting files needed by these skills:
 
 | Skill | Purpose |
