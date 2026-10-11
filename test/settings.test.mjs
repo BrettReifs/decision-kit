@@ -32,6 +32,13 @@ test("index can be filtered and searched without mutating catalog entries", () =
     assert.equal(listSettings({ component: "missing" }).length, 0);
 });
 
+test("recommendation caveats cannot mutate the catalog or later search results", () => {
+    const result = recommendSettings({ goals: ["parallel-work"] });
+    result.recommendations.find(({ id }) => id === "session.execution").caveats.push("mutable-marker");
+    assert.equal(settingsCatalog.find(({ id }) => id === "session.execution").caveats.includes("mutable-marker"), false);
+    assert.equal(listSettings({ query: "mutable-marker" }).length, 0);
+});
+
 test("cost classifier returns an advisory combination without changing inputs", () => {
     const needs = { goals: ["lower-cost"] };
     const result = recommendSettings(needs);
@@ -53,6 +60,9 @@ test("network restrictions are a sandboxed combination", () => {
     assert.deepEqual(result.recommendations.map(({ id, value }) => [id, value]), [
         ["sandbox.enabled", true], ["sandbox.internet", false], ["sandbox.localNetwork", false],
     ]);
+    assert.match(result.reviewWarnings[0], /active session/i);
+    assert.match(result.reviewWarnings[0], /new session/i);
+    assert.equal(result.requiresReview, true);
 });
 
 test("a managed constraint blocks the entire combination", () => {

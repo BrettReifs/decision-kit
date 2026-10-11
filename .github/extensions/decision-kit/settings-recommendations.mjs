@@ -42,7 +42,7 @@ export function recommendSettings(input) {
         ));
         const proposals = rule.choices.map(([id, value]) => {
             const setting = settingsCatalog.find((candidate) => candidate.id === id);
-            return { id, value, component: setting.component, rule: rule.id, reason: rule.reason, sources: setting.sources.map((source) => settingsSources[source]), caveats: setting.caveats };
+            return { id, value, component: setting.component, rule: rule.id, reason: rule.reason, sources: setting.sources.map((source) => settingsSources[source]), caveats: [...setting.caveats] };
         });
         const issues = [...missing];
         for (const proposal of proposals) {
@@ -72,6 +72,10 @@ export function recommendSettings(input) {
     const conflictingRules = new Set(conflicts.flatMap(({ proposals }) => proposals.map(({ rule }) => rule)));
     const ready = recommendations.filter(({ rules }) => rules.some((rule) => !conflictingRules.has(rule)));
     const combinationWarnings = [];
+    const reviewWarnings = [];
+    if (input.goals.includes("restricted-network")) {
+        reviewWarnings.push("Verify or re-enable sandboxing for the active session; a saved /sandbox off choice can survive restart and override the project default, or start a new session.");
+    }
     if (input.goals.includes("restricted-network") && input.goals.includes("custom-provider")) {
         combinationWarnings.push("External providers may be unreachable with outbound networking disabled; test routing before using this combination.");
     }
@@ -79,8 +83,8 @@ export function recommendSettings(input) {
         mode: "advisory", applied: false, evidence: "uncalibrated-heuristic",
         coverage: settingsCoverage,
         recommendations: ready,
-        conflicts, blocked, combinationWarnings,
-        requiresReview: conflicts.length > 0 || blocked.length > 0 || combinationWarnings.length > 0 || ready.some(({ value }) => value === null),
+        conflicts, blocked, combinationWarnings, reviewWarnings,
+        requiresReview: conflicts.length > 0 || blocked.length > 0 || combinationWarnings.length > 0 || reviewWarnings.length > 0 || ready.some(({ value }) => value === null),
         caveats: [
             "No settings are read, written, or applied. No model calls or credentials are used.",
             "managed is a caller-supplied effective constraint map, not a policy discovery or enforcement engine.",
