@@ -9,6 +9,15 @@
         "cwd": ".",
         "timeoutSec": 5
       }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": "node .github/extensions/decision-kit/prompt-coach-hook.mjs userPromptSubmitted",
+        "powershell": "node .github/extensions/decision-kit/prompt-coach-hook.mjs userPromptSubmitted",
+        "cwd": ".",
+        "timeoutSec": 3
+      }
     ]
   }
 }
